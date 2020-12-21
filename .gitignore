@@ -1,0 +1,6 @@
+package-lock.json
+dist/
+tic-tac-toe.iml
+node_modules/
+coverage/
+.idea/
