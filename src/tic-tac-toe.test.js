@@ -1,35 +1,32 @@
 import {describe, it} from "@jest/globals";
-import {isWinningCombination, winner} from './tic-tac-toe.js';
-import {areaIds, winningCombinations} from "./constants.js";
-
-// () -> 'X' | 'O' | 'none';
-function generateOption(player) {
-	let options = ['X', 'O', 'none'];
-	options = (player) ? options : options.filter((option) => option !== player);
-	const randomIndex = Math.floor(Math.random() * options.length);
-	return options[randomIndex];
-}
-
-// (string, num[], boolean) -> GameBoard
-function createGameboardFor(player, combination, excludePlayer) {
-	return areaIds.map((areaId) => {
-		return {
-			id: areaId,
-			occupiedBy: (combination.includes(areaId)) ? player : generateOption((excludePlayer) ? undefined : player)
-		}
-	});
-}
-
-// (string, number[][], boolean) -> GameBoard[]
-export function createAllWinningGameboardsFor(player, combinations, excludePlayer = false) {
-	return combinations.map((combination) => createGameboardFor(player, combination, excludePlayer));
-}
+import {isWinningCombination, winner, play} from './tic-tac-toe.js';
+import {winningCombinations} from "./constants.js";
+import {createGameBoard, createMultipleGameboardsFor} from "./utils/testing-utils/create-gameboards.js";
 
 describe('tic-tac-toe', () => {
+	describe('play', () => {
+		it('should add "X"  to the right location on the gameboard', () => {
+			const emptyGameBoard = createGameBoard([], []);
+			const expected = {id: 11, occupiedBy: 'X'};
+			const result = play(11, emptyGameBoard);
+			const resultArea = result.fold(() => expect(false).toBe(true),
+										   (board) => board.find((area) => area.id === expected.id));
+			expect(resultArea).toEqual(expected);
+		});
+		it('should add a single "O" to a random location on the gameboard', () => {
+			const emptyGameBoard = createGameBoard([], []);
+			const board = play(11, emptyGameBoard);
+			const allOs = board.fold(() => expect(false).toBe(true),
+										   (board) => board.filter((area) => area.occupiedBy === 'O'));
+			expect(allOs.length).toEqual(1);
+			expect(allOs[0].id).not.toBe(11);
+		});
+	});
+
 	describe('winner', () => {
 		it('should have "X" win in all winning situations', () => {
 			const player = 'X';
-			const gameBoards = createAllWinningGameboardsFor(player, winningCombinations);
+			const gameBoards = createMultipleGameboardsFor(player, winningCombinations);
 			gameBoards.forEach((gameBoard) => {
 				expect(winner(gameBoard)).toBe(player);
 			});
@@ -37,19 +34,19 @@ describe('tic-tac-toe', () => {
 
 		it('should have "O" win in all winning situations', () => {
 			const player = 'O';
-			const gameBoards = createAllWinningGameboardsFor(player, winningCombinations);
+			const gameBoards = createMultipleGameboardsFor(player, winningCombinations);
 			gameBoards.forEach((gameBoard) => {
 				expect(winner(gameBoard)).toBe(player);
 			});
 		});
 
 		it('should return "undetermined" when there is no winner', () => {
-			const tieingCombinations = [
+			const tieCombinations = [
 				[11, 13, 22, 31, 33],
 				[12, 21, 23, 32],
 				[11, 13, 22, 31]
 			]
-			const gameBoardForNone = createAllWinningGameboardsFor('X', tieingCombinations, true);
+			const gameBoardForNone = createMultipleGameboardsFor('X', tieCombinations, true);
 			expect(winner(gameBoardForNone)).toBe('undetermined');
 		});
 	});

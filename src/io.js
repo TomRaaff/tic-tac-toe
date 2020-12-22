@@ -1,4 +1,4 @@
-import {toString} from "./utils.js";
+import {toString} from "./utils/utils.js";
 import {areaIds} from './constants.js';
 import {play, winner} from './tic-tac-toe.js';
 
