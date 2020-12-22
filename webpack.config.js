@@ -22,5 +22,17 @@ module.exports = {
 				}
 			}
 		]
-	}
+	},
 }
+
+
+// devServer: {
+//  contentBase: [path.join(__dirname), path.join(__dirname, 'dist')],
+// 	port: 3000,
+// 	index: 'index.html',
+// 	overlay: true
+// 	mimeTypes: {
+// 		'text/html': ['phtml'],
+// 			'text/javascript': ['**.js']
+// 	}
+// }
