@@ -32,3 +32,16 @@ ES6 modules, so that's why I needed babel.
 For more help/instrucions on the webpack setup, see:
 https://medium.com/swlh/webpack-v4-in-examples-all-you-need-to-know-73831915b314
 
+Got into a lot of trouble because modules wasn't working 
+nicely with Webpack-dev-server and Jest. At the end of the
+day, it still wasn't working.
+
+### Day 5
+Removed Webpack. Reverted to using a custom node server found
+on stackoverflow which was able to solve the MIME-type problem.
+Also started over implementing Jest with Babel and found a 
+simple solution. The dev environment finally works with ES6
+modules and unit tests!
+
+Finalized the game and refactored a lot of the code to make 
+it more Functional. 

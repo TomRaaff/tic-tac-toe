@@ -1,7 +1,7 @@
-var http = require("http"),
-	url = require("url"),
-	path = require("path"),
-	fs = require("fs")
+const http = require("http"),
+	  url = require("url"),
+	  path = require("path"),
+	  fs = require("fs")
 port = process.argv[2] || 3000,
 	mimeTypes = {
 		"html": "text/html",
