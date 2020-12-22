@@ -1,27 +1,28 @@
-import {winningCombinations} from "./constants.js";
+import {CPU_TAG, NONE_TAG, PLAYER_TAG, winningCombinations} from "./constants.js";
 import {Either} from "./utils/Either.js";
-import {log} from "./utils/utils.js";
 
 // (number) -> Either[NotAvailableMsg, GameBoard]
 export function play(areaId, gameBoard) {
-	return whenAvailable(areaId, gameBoard).map((gameBoard) => {
-		const playerFilledBoard = fillGameBoard(gameBoard, 'X', areaId);
-		if ('X' === winner(playerFilledBoard)) {
-			return playerFilledBoard;
-		}
-		const randomArea = pickRandomAvailableAreaId(playerFilledBoard);
-		return fillGameBoard(playerFilledBoard, 'O', randomArea);
-	});
+	return whenAvailable(areaId, gameBoard)
+		.map((gameBoard) => {
+			const playerFilledBoard = fillGameBoard(gameBoard, PLAYER_TAG, areaId);
+			if ('X' === winner(playerFilledBoard)) {
+				return playerFilledBoard;
+			}
+			const randomArea = pickRandomAvailableAreaId(playerFilledBoard);
+			return fillGameBoard(playerFilledBoard, CPU_TAG, randomArea);
+		});
 }
 
-// todo:
+// todo: REVIEW
 //		this used to be a string. I refactored it to return an Either so I could
 //		remove an if-statement in the play-function. Not sure if it is an improvement.
 // (number, GameBoard) -> Either[NotAvailableMsg, GameBoard]
 function whenAvailable(areaId, gameBoard) {
-	const isAvailable = findArea(areaId, gameBoard).occupiedBy === 'none';
+	const isAvailable = findArea(areaId, gameBoard).occupiedBy === NONE_TAG;
 	return (isAvailable) ? Either.of(gameBoard) : Either.ofLeft('Area is not available. Pick a different one');
 }
+
 // (number, GameBoard) -> Area
 function findArea(id, gameBoard) {
 	return gameBoard.reduce((acc, cur) => (cur.id === id) ? cur : acc, {id: 0});
@@ -41,7 +42,7 @@ function fillGameBoard(gameBoard, playerTag, areaId) {
 function pickRandomAvailableAreaId(gameBoard) {
 	const randomIndex = Math.floor(Math.random() * gameBoard.length);
 	const area = gameBoard[randomIndex];
-	return (area.occupiedBy === 'none') ? area.id : pickRandomAvailableAreaId(gameBoard);
+	return (area.occupiedBy === NONE_TAG) ? area.id : pickRandomAvailableAreaId(gameBoard);
 }
 
 // (number[], number[]) => boolean
@@ -65,7 +66,7 @@ function checkWinner(gameBoard) {
 // (GameBoard) -> 'X' | 'O' | 'undetermined'
 export function winner(gameBoard) {
 	const isWinner = checkWinner(gameBoard);
-	if (isWinner('X')) return 'X';
-	if (isWinner('O')) return 'O';
+	if (isWinner(PLAYER_TAG)) return PLAYER_TAG;
+	if (isWinner(CPU_TAG)) return CPU_TAG;
 	return 'undetermined';
 }

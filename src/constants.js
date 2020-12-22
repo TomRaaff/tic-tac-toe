@@ -9,3 +9,6 @@ export const winningCombinations = [
 	[11, 22, 33],
 	[31, 22, 13]
 ]
+export const PLAYER_TAG = 'X';
+export const CPU_TAG = 'O';
+export const NONE_TAG = 'none';
