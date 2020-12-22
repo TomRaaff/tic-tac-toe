@@ -6,21 +6,21 @@ import {areaIds, winningCombinations} from "./constants.js";
 function generateOption(player) {
 	let options = ['X', 'O', 'none'];
 	options = (player) ? options : options.filter((option) => option !== player);
-	const zeroOrOne = Math.floor(Math.random() * options.length);
-	return options[zeroOrOne];
+	const randomIndex = Math.floor(Math.random() * options.length);
+	return options[randomIndex];
 }
 
-// (string) -> GameBoard
+// (string, num[], boolean) -> GameBoard
 function createGameboardFor(player, combination, excludePlayer) {
 	return areaIds.map((areaId) => {
 		return {
 			id: areaId,
-			occupiedBy: (combination.includes(areaId)) ? player : generateOption((excludePlayer) ? player : undefined)
+			occupiedBy: (combination.includes(areaId)) ? player : generateOption((excludePlayer) ? undefined : player)
 		}
 	});
 }
 
-// (string) -> GameBoard[]
+// (string, number[][], boolean) -> GameBoard[]
 export function createAllWinningGameboardsFor(player, combinations, excludePlayer = false) {
 	return combinations.map((combination) => createGameboardFor(player, combination, excludePlayer));
 }

@@ -2,24 +2,43 @@
     margin: 0;
     padding: 0;
     font-family: "Roboto Slab", sans-serif;
+    box-sizing: border-box;
 }
 
 header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
     padding: 20px;
     background: palevioletred;
     color: white;
+    width: 100vw;
 }
 
 main {
+    background: #eee;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
-    padding-top: 50px;
+}
+
+.messageBoard {
+    background: white;
+    border-radius: 5px;
+    margin: 80px auto 10px;
+    padding: 20px;
+    width: 75vw;
+    align-content: center;
 }
 
 .gameCenter {
     background: darkgray;
     height: 75vh;
     width: 75vw;
+    max-width: 75vh;
     margin: auto;
     display: grid;
     grid-template-columns: 30% 30% 30%;

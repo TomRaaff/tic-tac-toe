@@ -1,7 +1,7 @@
 import {readGameBoard, render} from "./io.js";
 import {winningCombinations} from "./constants.js";
 
-// (number) -> void
+// (number) -> GameBoard
 export function play(areaId) {
 	const gameBoard = readGameBoard();
 
@@ -10,16 +10,16 @@ export function play(areaId) {
 		const submitPlayerMove = fillGameBoard(gameBoard, 'X');
 		const playerFilledBoard = submitPlayerMove(areaId);
 		if ('X' === winner(playerFilledBoard)) {
-			render(playerFilledBoard);
-			congratulate();
-		} else {
-			const submitComputerMove = fillGameBoard(playerFilledBoard, 'O');
-			const computerFilledBoard = submitComputerMove(pickRandomAvailableAreaId(playerFilledBoard));
-			render(computerFilledBoard);
-			if ('O' === winner(computerFilledBoard) || winner(computerFilledBoard) === 'none') boo();
+			return playerFilledBoard;
 		}
+		// (number) -> GameBoard
+		const submitComputerMove = fillGameBoard(playerFilledBoard, 'O');
+		const randomArea = pickRandomAvailableAreaId(playerFilledBoard);
+		return submitComputerMove(randomArea);
 	} else {
-		renderMessage('Area', areaId, 'is NOT available. Pick again.');
+		// todo: convert to Either<GameBoard, NotAvailable>
+		const notAvailableMsg = 'Area ' + areaId + ' is NOT available. Pick again.';
+		return render(gameBoard, notAvailableMsg);
 	}
 }
 
@@ -54,45 +54,26 @@ function pickRandomAvailableAreaId(gameBoard) {
 
 // (number[], number[]) => boolean
 export function isWinningCombination(winningCombi, playerEntries) {
+	// all elements of winningCombi array should be true to be a winner;
 	return winningCombi.map((areaLocation) => playerEntries.includes(areaLocation))
-					   // all elements of array should be true to be a winner;
 					   .reduce((acc, cur) => (acc) ? cur : acc, true);
 }
 
-// (GameBoard) -> 'X' | 'O' | 'none' | 'undetermined'
+// (GameBoard) -> (string) -> boolean
+function checkWinner(gameBoard) {
+	return function isPlayerWinner(player) {
+		const locations = gameBoard.filter((area) => area.occupiedBy === player)
+								   .map((area) => area.id);
+		return winningCombinations.map((combi) => isWinningCombination(combi, locations))
+								  .filter((isWinning) => (isWinning))
+			.length > 0;
+	}
+}
+
+// (GameBoard) -> 'X' | 'O' | 'undetermined'
 export function winner(gameBoard) {
-	const xLocations = gameBoard.filter((area) => area.occupiedBy === 'X')
-								.map((area) => area.id);
-	const oLocations = gameBoard.filter((area) => area.occupiedBy === 'O')
-								.map((area) => area.id);
-	const isXWinner = winningCombinations.map((combi) => isWinningCombination(combi, xLocations))
-										 .filter((isWinning) => (isWinning))
-										 .length > 0;
-	if (isXWinner) return 'X';
-
-	const isOWinner = winningCombinations.map((combi) => isWinningCombination(combi, oLocations))
-										 .filter((isWinning) => isWinning)
-		.length > 0;
-	if (isOWinner) return 'O';
+	const isWinner = checkWinner(gameBoard);
+	if (isWinner('X')) return 'X';
+	if (isWinner('O')) return 'O';
 	return 'undetermined';
-}
-
-
-// contains side-effect
-// () -> void
-function congratulate() {
-	renderMessage('Congratulations! You won!');
-}
-
-// contains side-effect
-// () -> void
-function boo() {
-	renderMessage('Booo.... You lost...');
-}
-
-// contains side-effect
-// (string) -> void
-function renderMessage(msg) {
-	window.alert(msg);
-	console.log(msg);
 }
