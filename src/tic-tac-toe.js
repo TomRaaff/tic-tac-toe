@@ -1,25 +1,21 @@
-import {readGameBoard, render} from "./io.js";
 import {winningCombinations} from "./constants.js";
+import {Either} from "./utils/Either.js";
 
-// (number) -> GameBoard
-export function play(areaId) {
-	const gameBoard = readGameBoard();
-
+// (number) -> Either[GameBoard, NotAvailableMsg]
+export function play(areaId, gameBoard) {
 	if (isAvailable(areaId, gameBoard)) {
 		// (number) -> GameBoard
 		const submitPlayerMove = fillGameBoard(gameBoard, 'X');
 		const playerFilledBoard = submitPlayerMove(areaId);
 		if ('X' === winner(playerFilledBoard)) {
-			return playerFilledBoard;
+			return Either.of(playerFilledBoard);
 		}
 		// (number) -> GameBoard
 		const submitComputerMove = fillGameBoard(playerFilledBoard, 'O');
 		const randomArea = pickRandomAvailableAreaId(playerFilledBoard);
-		return submitComputerMove(randomArea);
+		return Either.of(submitComputerMove(randomArea));
 	} else {
-		// todo: convert to Either<GameBoard, NotAvailable>
-		const notAvailableMsg = 'Area ' + areaId + ' is NOT available. Pick again.';
-		return render(gameBoard, notAvailableMsg);
+		return Either.ofLeft('Area is not available. Pick again.');
 	}
 }
 
@@ -28,6 +24,7 @@ function findArea(id, gameBoard) {
 	return gameBoard.reduce((acc, cur) => (cur.id === id) ? cur : acc, {id: 0});
 }
 
+// todo: return Either[NotAvailableMsg, boolean]
 // (number, GameBoard) -> boolean
 function isAvailable(areaId, gameBoard) {
 	return findArea(areaId, gameBoard).occupiedBy === 'none';

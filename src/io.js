@@ -7,9 +7,10 @@ import {play, winner} from './tic-tac-toe.js';
 function attachClickHandlers() {
 	areaIds.forEach((id) => document.getElementById(toString(id))
 									.addEventListener('click', () => {
-										const gameBoard = play(id);
-										const msg = getMessage(winner(gameBoard));
-										render(gameBoard, msg);
+										const startingGameBoard = readGameBoard();
+										const gameBoardEither = play(id, startingGameBoard);
+										gameBoardEither.fold((msg) => render(startingGameBoard, msg),
+															 (gameBoard) => render(gameBoard, getMessage(winner(gameBoard))));
 									}));
 }
 
