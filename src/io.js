@@ -1,6 +1,7 @@
 import {toString} from "./utils/utils.js";
 import {areaIds} from './constants.js';
 import {play, winner} from './tic-tac-toe.js';
+import {Maybe} from "./utils/Maybe.js";
 
 // NOT idempotent because of areaIds and document.getElementById
 // () -> void
@@ -9,22 +10,23 @@ function attachClickHandlers() {
 									.addEventListener('click', () => {
 										const startingGameBoard = readGameBoard();
 										const gameBoardEither = play(id, startingGameBoard);
-										gameBoardEither.fold((msg) => render(startingGameBoard, msg),
+										gameBoardEither.fold((msg) => render(startingGameBoard, Maybe.of(msg)),
 															 (gameBoard) => render(gameBoard, getMessage(winner(gameBoard))));
 									}));
 }
 
+// (string) -> Maybe[string]
 function getMessage(winner) {
 	if (winner === 'X') {
-		return 'Great job! You won!';
+		return Maybe.of('Great job! You won!');
 	}
 	if (winner === 'O') {
-		return 'Oh no! You lost!';
+		return Maybe.of('Oh no! You lost!');
 	}
-	return undefined;
+	return Maybe.empty();
 }
 
-// NOT referentially transparent. Side-effect in document.getElementById(id)
+// NOT idempotent because of document.getElementById(id)
 // () -> [ {id: number, occupiedBy: string} ]
 function readGameBoard() {
 	return areaIds.map(toString)
@@ -37,7 +39,7 @@ function readGameBoard() {
 				  });
 }
 
-// (GameBoard) -> GameBoard
+// (GameBoard, Maybe[string]) -> GameBoard
 function render(gameBoard, message) {
 	renderMessage(message);
 	return renderBoard(gameBoard);
@@ -50,10 +52,12 @@ function renderBoard(gameBoard) {
 	return gameBoard;
 }
 
-// (string) -> void
+// NOT idempotent because of document.querySelector()
+// (Maybe[string]) -> void
 function renderMessage(msg) {
-	if (msg === undefined) msg = ' ';
-	document.getElementsByClassName("messageBoard")[0].innerText = msg;
+	document.querySelector(".messageBoard")
+		.innerText = msg.fold(() => ' ',
+							  msg => msg);
 }
 
-export {readGameBoard, render, attachClickHandlers};
+export {readGameBoard, attachClickHandlers};
