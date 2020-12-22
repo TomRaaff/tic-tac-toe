@@ -1,10 +1,9 @@
-// import {log} from "./utils";
-import {readGameBoard, render} from "./io";
-import {winningCombinations} from "./constants";
+import {readGameBoard, render} from "./io.js";
+import {winningCombinations} from "./constants.js";
 
 // (number) -> void
 export function play(areaId) {
-	const gameBoard = readGameBoard;
+	const gameBoard = readGameBoard();
 
 	if (isAvailable(areaId, gameBoard)) {
 		// (number) -> GameBoard

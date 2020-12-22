@@ -1,5 +1,5 @@
 function log(fn) {
-	return function inner(...args) {
+	return function innerLog(...args) {
 		console.log(fn.name, '( ', ...args, ' ) -> ', fn(...args));
 		return fn(...args);
 	}
