@@ -1,6 +1,6 @@
-import {isWinningCombination, winner} from '../tic-tac-toe.js';
 import {describe, it} from "@jest/globals";
-import {areaIds, winningCombinations} from "../constants.js";
+import {isWinningCombination, winner} from './tic-tac-toe.js';
+import {areaIds, winningCombinations} from "./constants.js";
 
 // () -> 'X' | 'O' | 'none';
 function generateOption(player) {
@@ -21,7 +21,7 @@ function createGameboardFor(player, combination, excludePlayer) {
 }
 
 // (string) -> GameBoard[]
-function createAllWinningGameboardsFor(player, combinations, excludePlayer = false) {
+export function createAllWinningGameboardsFor(player, combinations, excludePlayer = false) {
 	return combinations.map((combination) => createGameboardFor(player, combination, excludePlayer));
 }
 
@@ -49,7 +49,7 @@ describe('tic-tac-toe', () => {
 				[12, 21, 23, 32],
 				[11, 13, 22, 31]
 			]
-			const gameBoardForNone = createGameboardFor('X', tieingCombinations, true);
+			const gameBoardForNone = createAllWinningGameboardsFor('X', tieingCombinations, true);
 			expect(winner(gameBoardForNone)).toBe('undetermined');
 		});
 	});

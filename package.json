@@ -6,20 +6,15 @@
   "scripts": {
     "start": "npm run serve",
     "serve": "node server.js",
-    "test": "jest --coverage"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "babel-loader": "^8.2.2",
-    "jest": "^26.6.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
     "@jest/globals": "^26.6.2",
-    "webpack": "^5.11.0",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "jest": "^26.6.3"
   },
   "dependencies": {}
 }
