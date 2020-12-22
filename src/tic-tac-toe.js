@@ -2,22 +2,21 @@ import {winningCombinations} from "./constants.js";
 import {Either} from "./utils/Either.js";
 import {log} from "./utils/utils.js";
 
-// (number) -> Either[GameBoard, NotAvailableMsg]
+// (number) -> Either[NotAvailableMsg, GameBoard]
 export function play(areaId, gameBoard) {
 	return whenAvailable(areaId, gameBoard).map((gameBoard) => {
-		// (number) -> GameBoard
-		const submitPlayerMove = fillGameBoard(gameBoard, 'X');
-		const playerFilledBoard = submitPlayerMove(areaId);
+		const playerFilledBoard = fillGameBoard(gameBoard, 'X', areaId);
 		if ('X' === winner(playerFilledBoard)) {
 			return playerFilledBoard;
 		}
-		// (number) -> GameBoard
-		const submitComputerMove = fillGameBoard(playerFilledBoard, 'O');
 		const randomArea = pickRandomAvailableAreaId(playerFilledBoard);
-		return submitComputerMove(randomArea);
+		return fillGameBoard(playerFilledBoard, 'O', randomArea);
 	});
 }
 
+// todo:
+//		this used to be a string. I refactored it to return an Either so I could
+//		remove an if-statement in the play-function. Not sure if it is an improvement.
 // (number, GameBoard) -> Either[NotAvailableMsg, GameBoard]
 function whenAvailable(areaId, gameBoard) {
 	const isAvailable = findArea(areaId, gameBoard).occupiedBy === 'none';
@@ -28,16 +27,14 @@ function findArea(id, gameBoard) {
 	return gameBoard.reduce((acc, cur) => (cur.id === id) ? cur : acc, {id: 0});
 }
 
-// (GameBoard, string) -> (number) -> GameBoard
-function fillGameBoard(gameBoard, playerTag) {
-	return function fillBoard(areaId) {
-		return gameBoard.map((area) => {
-			return {
-				...area,
-				occupiedBy: (areaId === area.id) ? playerTag : area.occupiedBy
-			}
-		});
-	}
+// (GameBoard, string, number) -> GameBoard
+function fillGameBoard(gameBoard, playerTag, areaId) {
+	return gameBoard.map((area) => {
+		return {
+			...area,
+			occupiedBy: (areaId === area.id) ? playerTag : area.occupiedBy
+		}
+	});
 }
 
 // (GameBoard) -> number
