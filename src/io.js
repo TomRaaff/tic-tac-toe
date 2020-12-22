@@ -1,5 +1,5 @@
 import {toString} from "./utils/utils.js";
-import {areaIds, CPU_TAG, NONE_TAG, PLAYER_TAG} from './constants.js';
+import {areaIds, tags} from './constants.js';
 import {play, winner} from './tic-tac-toe.js';
 import {Maybe} from "./utils/Maybe.js";
 
@@ -17,10 +17,10 @@ function attachClickHandlers() {
 
 // (string) -> Maybe[string]
 function getMessage(winner) {
-	if (winner === PLAYER_TAG) {
+	if (winner === tags.PLAYER) {
 		return Maybe.of('Great job! You won!');
 	}
-	if (winner === CPU_TAG) {
+	if (winner === tags.CPU) {
 		return Maybe.of('Oh no! You lost!');
 	}
 	return Maybe.empty();
@@ -34,7 +34,7 @@ function readGameBoard() {
 				  .map((el) => {
 					  return {
 						  id: parseInt(el.id),
-						  occupiedBy: el.innerText || NONE_TAG
+						  occupiedBy: el.innerText || tags.NONE
 					  }
 				  });
 }
@@ -47,7 +47,7 @@ function render(gameBoard, message) {
 
 // (GameBoard) -> GameBoard
 function renderBoard(gameBoard) {
-	gameBoard.filter((area) => area.occupiedBy !== NONE_TAG)
+	gameBoard.filter((area) => area.occupiedBy !== tags.NONE)
 			 .forEach((area) => document.getElementById(area.id).innerText = area.occupiedBy);
 	return gameBoard;
 }

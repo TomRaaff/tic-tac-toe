@@ -1,16 +1,16 @@
-import {CPU_TAG, NONE_TAG, PLAYER_TAG, winningCombinations} from "./constants.js";
+import {tags, winningCombinations} from "./constants.js";
 import {Either} from "./utils/Either.js";
 
 // (number) -> Either[NotAvailableMsg, GameBoard]
 export function play(areaId, gameBoard) {
 	return whenAvailable(areaId, gameBoard)
 		.map((gameBoard) => {
-			const playerFilledBoard = fillGameBoard(gameBoard, PLAYER_TAG, areaId);
+			const playerFilledBoard = fillGameBoard(gameBoard, tags.PLAYER, areaId);
 			if ('X' === winner(playerFilledBoard)) {
 				return playerFilledBoard;
 			}
 			const randomArea = pickRandomAvailableAreaId(playerFilledBoard);
-			return fillGameBoard(playerFilledBoard, CPU_TAG, randomArea);
+			return fillGameBoard(playerFilledBoard, tags.CPU, randomArea);
 		});
 }
 
@@ -19,7 +19,7 @@ export function play(areaId, gameBoard) {
 //		remove an if-statement in the play-function. Not sure if it is an improvement.
 // (number, GameBoard) -> Either[NotAvailableMsg, GameBoard]
 function whenAvailable(areaId, gameBoard) {
-	const isAvailable = findArea(areaId, gameBoard).occupiedBy === NONE_TAG;
+	const isAvailable = findArea(areaId, gameBoard).occupiedBy === tags.NONE;
 	return (isAvailable) ? Either.of(gameBoard) : Either.ofLeft('Area is not available. Pick a different one');
 }
 
@@ -42,7 +42,7 @@ function fillGameBoard(gameBoard, playerTag, areaId) {
 function pickRandomAvailableAreaId(gameBoard) {
 	const randomIndex = Math.floor(Math.random() * gameBoard.length);
 	const area = gameBoard[randomIndex];
-	return (area.occupiedBy === NONE_TAG) ? area.id : pickRandomAvailableAreaId(gameBoard);
+	return (area.occupiedBy === tags.NONE) ? area.id : pickRandomAvailableAreaId(gameBoard);
 }
 
 // (number[], number[]) => boolean
@@ -66,7 +66,7 @@ function checkWinner(gameBoard) {
 // (GameBoard) -> 'X' | 'O' | 'undetermined'
 export function winner(gameBoard) {
 	const isWinner = checkWinner(gameBoard);
-	if (isWinner(PLAYER_TAG)) return PLAYER_TAG;
-	if (isWinner(CPU_TAG)) return CPU_TAG;
-	return 'undetermined';
+	if (isWinner(tags.PLAYER)) return tags.PLAYER;
+	if (isWinner(tags.CPU)) return tags.CPU;
+	return tags.UNDETERMINED;
 }
