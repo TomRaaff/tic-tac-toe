@@ -1,4 +1,4 @@
-import { attachClickHandlers } from './io.js';
+import {attachGameClickHandlers, attachRestartClickHandler} from './io.js';
 
 /*
 	todo:
@@ -7,7 +7,8 @@ import { attachClickHandlers } from './io.js';
  */
 export function start() {
 	console.log('Lets play tic tac toe!');
-	attachClickHandlers();
+	attachGameClickHandlers();
+	attachRestartClickHandler();
 }
 
 start();

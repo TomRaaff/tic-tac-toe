@@ -5,7 +5,7 @@ import {Maybe} from "./utils/Maybe.js";
 
 // NOT idempotent because of areaIds and document.getElementById
 // () -> void
-function attachClickHandlers() {
+function attachGameClickHandlers() {
 	areaIds.forEach((id) => document.getElementById(toString(id))
 									.addEventListener('click', () => {
 										const startingGameBoard = readGameBoard();
@@ -60,4 +60,13 @@ function renderMessage(msg) {
 							  msg => msg);
 }
 
-export {readGameBoard, attachClickHandlers};
+
+function attachRestartClickHandler() {
+	document.querySelector("button.button")
+		.addEventListener("click", () => {
+			document.querySelectorAll(".gameArea")
+					.forEach((el) => el.innerText = '');
+		});
+}
+
+export {readGameBoard, attachGameClickHandlers, attachRestartClickHandler};

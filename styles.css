@@ -36,9 +36,9 @@ main {
 
 .gameCenter {
     background: darkgray;
-    height: 75vh;
-    width: 75vw;
-    max-width: 75vh;
+    height: 65vh;
+    width: 65vw;
+    max-width: 65vh;
     margin: auto;
     display: grid;
     grid-template-columns: 30% 30% 30%;
@@ -59,4 +59,28 @@ main {
 .gameArea:hover {
     background: palevioletred;
     color: white;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: darkgray;
+    width: 100vw;
+    padding: 15px;
+}
+
+.button {
+    border-radius: 5px;
+    background: palevioletred;
+    color: white;
+    border: 0;
+    padding: 5px 15px;
+    font-size: 20px;
+    float: right;
+}
+
+.button:hover {
+    background: mediumvioletred;
+    cursor: pointer;
 }
