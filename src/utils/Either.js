@@ -23,7 +23,7 @@ class Right {
 	isLeft() { return false; }
 	isRight() { return true; }
 	map(fn) { return Right.of(fn(this.value)); }
-	flatmap(fn) { return fn(this.value); }
+	flatMap(fn) { return fn(this.value); }
 	fold(ifLeft, fn) { return fn(this.value); }
 	static of(value) {
 		return new Right(value);

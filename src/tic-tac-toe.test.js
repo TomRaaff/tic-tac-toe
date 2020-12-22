@@ -1,5 +1,5 @@
 import {describe, it} from "@jest/globals";
-import {isWinningCombination, winner, play} from './tic-tac-toe.js';
+import {isWinningCombination, play, winner} from './tic-tac-toe.js';
 import {winningCombinations} from "./constants.js";
 import {createGameBoard, createMultipleGameboardsFor} from "./utils/testing-utils/create-gameboards.js";
 
@@ -17,9 +17,17 @@ describe('tic-tac-toe', () => {
 			const emptyGameBoard = createGameBoard([], []);
 			const board = play(11, emptyGameBoard);
 			const allOs = board.fold(() => expect(false).toBe(true),
-										   (board) => board.filter((area) => area.occupiedBy === 'O'));
+									 (board) => board.filter((area) => area.occupiedBy === 'O'));
 			expect(allOs.length).toEqual(1);
 			expect(allOs[0].id).not.toBe(11);
+		});
+		describe('when area is already taken', () => {
+			it('should not change the gameboard and give an unavailable message', () => {
+				const emptyGameBoard = createGameBoard([11], [12]);
+				const board = play(11, emptyGameBoard);
+				board.fold((msg) => expect(typeof msg).toEqual('string'),
+						   () => expect(false).toBe(true));
+			});
 		});
 	});
 
