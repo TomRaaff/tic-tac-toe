@@ -3,24 +3,27 @@ import {areaIds, tags} from './constants.js';
 import {play, winner} from './tic-tac-toe.js';
 import {Maybe} from "./utils/Maybe.js";
 
+// todo: NOG kleinere functies schrijven
 function attachRestartClickHandler() {
 	document
 		.querySelector("button.button")
 		.addEventListener("click", () => {
+			// todo: dit gebeurt vaker. Schrijf een get en set function voor zo'n area
 			document.querySelectorAll(".gameArea")
 					.forEach((el) => el.innerText = '');
 		});
 }
 
+// todo play() should return an action and a payload
+// todo render() should be able to handle actions
 // NOT idempotent because of areaIds and document.getElementById
 // () -> void
 function attachGameClickHandlers() {
 	areaIds.forEach((id) => document.getElementById(toString(id))
 									.addEventListener('click', () => {
-										const startingGameBoard = readGameBoard();
-										const gameBoardEither = play(id, startingGameBoard);
-										gameBoardEither.fold((msg) => render(startingGameBoard, Maybe.of(msg)),
-															 (gameBoard) => render(gameBoard, getMessage(winner(gameBoard))));
+										const currentGameBoard = readGameBoard();
+										play(id, currentGameBoard).fold((msg) => render(currentGameBoard, Maybe.of(msg)),
+																		(gameBoard) => render(gameBoard, getMessage(winner(gameBoard))));
 									}));
 }
 
@@ -35,6 +38,7 @@ function getMessage(winner) {
 	return Maybe.empty();
 }
 
+// todo el.innerText functie schrijven voor ophalen van speler
 // NOT idempotent because of document.getElementById(id)
 // () -> [ {id: number, occupiedBy: string} ]
 function readGameBoard() {

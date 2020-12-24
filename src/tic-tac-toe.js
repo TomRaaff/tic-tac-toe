@@ -1,6 +1,9 @@
 import {tags, winningCombinations} from "./constants.js";
 import {Either} from "./utils/Either.js";
+import {Maybe} from "./utils/Maybe";
 
+// todo play moet acties teruggeven. Welke acties moeten hier uit komen? Implementeren zoals React redux systeem?
+// todo moet de cpu move in deze functie staan?
 // (number) -> Either[NotAvailableMsg, GameBoard]
 export function play(areaId, gameBoard) {
 	return whenAvailable(areaId, gameBoard)
@@ -14,18 +17,20 @@ export function play(areaId, gameBoard) {
 		});
 }
 
-// todo: REVIEW
-//		this used to be a string. I refactored it to return an Either so I could
-//		remove an if-statement in the play-function. Not sure if it is an improvement.
+// todo: terug schrijven naar return boolean voor een if-statement in de play function
 // (number, GameBoard) -> Either[NotAvailableMsg, GameBoard]
 function whenAvailable(areaId, gameBoard) {
-	const isAvailable = findArea(areaId, gameBoard).occupiedBy === tags.NONE;
-	return (isAvailable) ? Either.of(gameBoard) : Either.ofLeft('Area is not available. Pick a different one');
+	const area = findArea(areaId, gameBoard);
+	if (area) {
+		const isAvailable = area.occupiedBy === tags.NONE;
+		return (isAvailable) ? Either.of(gameBoard) : Either.ofLeft('Area is not available. Pick a different one');
+	}
 }
 
-// (number, GameBoard) -> Area
+
+// todo return Maybe
 function findArea(id, gameBoard) {
-	return gameBoard.reduce((acc, cur) => (cur.id === id) ? cur : acc, {id: 0});
+	return gameBoard.find((area => area.id === id));
 }
 
 // (GameBoard, string, number) -> GameBoard

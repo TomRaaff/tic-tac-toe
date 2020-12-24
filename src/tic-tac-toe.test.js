@@ -3,6 +3,7 @@ import {isWinningCombination, play, winner} from './tic-tac-toe.js';
 import {winningCombinations} from "./constants.js";
 import {createGameBoard, createMultipleGameboardsFor} from "./utils/testing-utils/create-gameboards.js";
 
+// todo: mock de randomgenerator? Dan kan je een specifiek antwoord verwachten
 describe('tic-tac-toe', () => {
 	describe('play', () => {
 		it('should add "X"  to the right location on the gameboard', () => {
