@@ -33,7 +33,7 @@ function fillGameBoard(gameBoard, playerTag, areaId) {
 	return gameBoard.map((area) => {
 		return {
 			...area,
-			occupiedBy: (areaId === area.id) ? playerTag : area.occupiedBy
+			occupiedBy: (area.id === areaId) ? playerTag : area.occupiedBy
 		}
 	});
 }
@@ -55,9 +55,9 @@ export function isWinningCombination(winningCombi, playerEntries) {
 // (GameBoard) -> (string) -> boolean
 function checkWinner(gameBoard) {
 	return function isPlayerWinner(player) {
-		const locations = gameBoard.filter((area) => area.occupiedBy === player)
-								   .map((area) => area.id);
-		return winningCombinations.map((combi) => isWinningCombination(combi, locations))
+		const playerEntries = gameBoard.filter((area) => area.occupiedBy === player)
+									   .map((area) => area.id);
+		return winningCombinations.map((combi) => isWinningCombination(combi, playerEntries))
 								  .filter((isWinning) => (isWinning))
 			.length > 0;
 	}

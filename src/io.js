@@ -3,6 +3,15 @@ import {areaIds, tags} from './constants.js';
 import {play, winner} from './tic-tac-toe.js';
 import {Maybe} from "./utils/Maybe.js";
 
+function attachRestartClickHandler() {
+	document
+		.querySelector("button.button")
+		.addEventListener("click", () => {
+			document.querySelectorAll(".gameArea")
+					.forEach((el) => el.innerText = '');
+		});
+}
+
 // NOT idempotent because of areaIds and document.getElementById
 // () -> void
 function attachGameClickHandlers() {
@@ -60,13 +69,5 @@ function renderMessage(msg) {
 							  msg => msg);
 }
 
-
-function attachRestartClickHandler() {
-	document.querySelector("button.button")
-		.addEventListener("click", () => {
-			document.querySelectorAll(".gameArea")
-					.forEach((el) => el.innerText = '');
-		});
-}
 
 export {readGameBoard, attachGameClickHandlers, attachRestartClickHandler};
