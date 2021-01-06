@@ -44,4 +44,17 @@ simple solution. The dev environment finally works with ES6
 modules and unit tests!
 
 Finalized the game and refactored a lot of the code to make 
-it more Functional. 
+it more Functional.
+
+### Day 6
+Did a code review with Dennis. He gave me some very good insights.
+Wrote a lot of todo's down and I'm going to refactor the app soon.
+
+### Day 7
+Refactored all the todo's. And, oh my god, it looks so much better!
+The separation between I/O and game-logic is super clear now! 
+I'm very happy with the changes.
+The only advice I didn't follow was Dennis' suggestion to have the 
+render function accept 'actions' rather than having multiple render functions.
+Or, well, I did follow his advice, but came to the conclusion that it
+would be even better to have a render function that accepted an object.  

@@ -1,3 +1,4 @@
+// (Function) -> Function
 function log(fn) {
 	return function innerLog(...args) {
 		console.log(fn.name, '( ', ...args, ' ) -> ', fn(...args));
@@ -5,8 +6,13 @@ function log(fn) {
 	}
 }
 
+// (number) -> string
 function toString(num) {
 	return num.toString();
 }
 
-export {log, toString};
+// () -> void
+function doNothing() {
+}
+
+export {log, toString, doNothing};

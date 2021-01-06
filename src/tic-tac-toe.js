@@ -1,36 +1,50 @@
 import {tags, winningCombinations} from "./constants.js";
-import {Either} from "./utils/Either.js";
-import {Maybe} from "./utils/Maybe";
+import {Maybe} from "./utils/Maybe.js";
+import {log} from "./utils/utils.js";
 
-// todo play moet acties teruggeven. Welke acties moeten hier uit komen? Implementeren zoals React redux systeem?
-// todo moet de cpu move in deze functie staan?
-// (number) -> Either[NotAvailableMsg, GameBoard]
+// (number, GameBoard) -> RenderObject<{gameBoard, msg}>
 export function play(areaId, gameBoard) {
-	return whenAvailable(areaId, gameBoard)
-		.map((gameBoard) => {
-			const playerFilledBoard = fillGameBoard(gameBoard, tags.PLAYER, areaId);
-			if ('X' === winner(playerFilledBoard)) {
-				return playerFilledBoard;
-			}
-			const randomArea = pickRandomAvailableAreaId(playerFilledBoard);
-			return fillGameBoard(playerFilledBoard, tags.CPU, randomArea);
-		});
-}
-
-// todo: terug schrijven naar return boolean voor een if-statement in de play function
-// (number, GameBoard) -> Either[NotAvailableMsg, GameBoard]
-function whenAvailable(areaId, gameBoard) {
-	const area = findArea(areaId, gameBoard);
-	if (area) {
-		const isAvailable = area.occupiedBy === tags.NONE;
-		return (isAvailable) ? Either.of(gameBoard) : Either.ofLeft('Area is not available. Pick a different one');
+	if (isAvailable(areaId, gameBoard)) {
+		const playerGameBoard = playerMove(areaId, gameBoard);
+		if ('X' === winner(playerGameBoard)) {
+			return {
+					   gameBoard: Maybe.of(playerGameBoard),
+					   msg: Maybe.of('Great job! You won!')
+				   };
+		}
+		const cpuGameBoard = cpuMove(playerGameBoard);
+		return {
+				   gameBoard: Maybe.of(cpuGameBoard),
+				   msg: getMessage(winner(cpuGameBoard))
+			   };
+	} else {
+		return {
+				   gameBoard: Maybe.empty(),
+				   msg: Maybe.of('Area is not available. Pick a different one')
+			   };
 	}
 }
 
+// (number, GameBoard) -> GameBoard
+function playerMove(areaId, gameBoard) {
+	return fillGameBoard(gameBoard, tags.PLAYER, areaId);
+}
 
-// todo return Maybe
+// (GameBoard) -> GameBoard
+function cpuMove(gameBoard) {
+	const randomArea = pickRandomAvailableAreaId(gameBoard);
+	return fillGameBoard(gameBoard, tags.CPU, randomArea);
+}
+
+// (number, GameBoard) -> boolean
+function isAvailable(areaId, gameBoard) {
+	return findArea(areaId, gameBoard).fold(() => false,
+											(area) => area.occupiedBy === tags.NONE);
+}
+
+// (number, GameBoard) -> Maybe<{id, occupiedBy}>
 function findArea(id, gameBoard) {
-	return gameBoard.find((area => area.id === id));
+	return Maybe.of(gameBoard.find((area => area.id === id)));
 }
 
 // (GameBoard, string, number) -> GameBoard
@@ -69,9 +83,20 @@ function checkWinner(gameBoard) {
 }
 
 // (GameBoard) -> 'X' | 'O' | 'undetermined'
-export function winner(gameBoard) {
+function winner(gameBoard) {
 	const isWinner = checkWinner(gameBoard);
 	if (isWinner(tags.PLAYER)) return tags.PLAYER;
 	if (isWinner(tags.CPU)) return tags.CPU;
 	return tags.UNDETERMINED;
+}
+
+// (string) -> Maybe[string]
+function getMessage(winner) {
+	if (winner === tags.PLAYER) {
+		return Maybe.of('Great job! You won!');
+	}
+	if (winner === tags.CPU) {
+		return Maybe.of('Oh no! You lost!');
+	}
+	return Maybe.empty();
 }

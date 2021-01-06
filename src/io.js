@@ -1,61 +1,54 @@
-import {toString} from "./utils/utils.js";
+import {doNothing, toString} from "./utils/utils.js";
 import {areaIds, tags} from './constants.js';
-import {play, winner} from './tic-tac-toe.js';
+import {play} from './tic-tac-toe.js';
 import {Maybe} from "./utils/Maybe.js";
 
-// todo: NOG kleinere functies schrijven
 function attachRestartClickHandler() {
 	document
 		.querySelector("button.button")
 		.addEventListener("click", () => {
-			// todo: dit gebeurt vaker. Schrijf een get en set function voor zo'n area
-			document.querySelectorAll(".gameArea")
-					.forEach((el) => el.innerText = '');
+			clearGameAreas();
 		});
 }
 
-// todo play() should return an action and a payload
-// todo render() should be able to handle actions
+function clearGameAreas() {
+	const emptyGameBoard = areaIds.map(id => ({id, occupiedBy: ''}));
+	render({
+			   gameBoard: Maybe.of(emptyGameBoard),
+			   msg: Maybe.empty()
+		   });
+}
+
 // NOT idempotent because of areaIds and document.getElementById
 // () -> void
 function attachGameClickHandlers() {
 	areaIds.forEach((id) => document.getElementById(toString(id))
 									.addEventListener('click', () => {
-										const currentGameBoard = readGameBoard();
-										play(id, currentGameBoard).fold((msg) => render(currentGameBoard, Maybe.of(msg)),
-																		(gameBoard) => render(gameBoard, getMessage(winner(gameBoard))));
+										render(play(id, readGameBoard()));
 									}));
 }
 
-// (string) -> Maybe[string]
-function getMessage(winner) {
-	if (winner === tags.PLAYER) {
-		return Maybe.of('Great job! You won!');
-	}
-	if (winner === tags.CPU) {
-		return Maybe.of('Oh no! You lost!');
-	}
-	return Maybe.empty();
-}
-
-// todo el.innerText functie schrijven voor ophalen van speler
-// NOT idempotent because of document.getElementById(id)
+// NOT idempotent because of readGameArea(id)
 // () -> [ {id: number, occupiedBy: string} ]
 function readGameBoard() {
-	return areaIds.map(toString)
-				  .map((id) => document.getElementById(id))
-				  .map((el) => {
-					  return {
-						  id: parseInt(el.id),
-						  occupiedBy: el.innerText || tags.NONE
-					  }
-				  });
+	return areaIds.map((id) => {
+		return {
+			id: id,
+			occupiedBy: readGameArea(id).fold(() => tags.NONE,
+											  (innerText) => innerText)
+		}
+	});
 }
 
-// (GameBoard, Maybe[string]) -> GameBoard
-function render(gameBoard, message) {
-	renderMessage(message);
-	return renderBoard(gameBoard);
+// (number) -> Maybe<string>
+function readGameArea(id) {
+	return Maybe.of(document.getElementById(id)?.innerText);
+}
+
+// (RenderObj<{gameBoard, msg}>) -> void
+function render(renderObj) {
+	renderObj.gameBoard.fold(doNothing, renderBoard);
+	renderObj.msg.fold(clearMessage, renderMessage);
 }
 
 // (GameBoard) -> GameBoard
@@ -66,11 +59,13 @@ function renderBoard(gameBoard) {
 }
 
 // NOT idempotent because of document.querySelector()
-// (Maybe[string]) -> void
+// (string) -> void
 function renderMessage(msg) {
-	document.querySelector(".messageBoard")
-		.innerText = msg.fold(() => ' ',
-							  msg => msg);
+	document.querySelector(".messageBoard").innerText = msg;
+}
+
+function clearMessage() {
+	return renderMessage('');
 }
 
 
