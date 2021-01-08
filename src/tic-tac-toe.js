@@ -1,27 +1,21 @@
 import {tags, winningCombinations} from "./constants.js";
 import {Maybe} from "./utils/Maybe.js";
+import {RenderObject} from "./utils/RenderObject.js";
 import {log} from "./utils/utils.js";
 
 // (number, GameBoard) -> RenderObject<{gameBoard, msg}>
 export function play(areaId, gameBoard) {
 	if (isAvailable(areaId, gameBoard)) {
 		const playerGameBoard = playerMove(areaId, gameBoard);
-		if ('X' === winner(playerGameBoard)) {
-			return {
-					   gameBoard: Maybe.of(playerGameBoard),
-					   msg: Maybe.of('Great job! You won!')
-				   };
+		if (tags.PLAYER === winner(playerGameBoard)) {
+			return new RenderObject(playerGameBoard,
+									getMessage(winner(playerGameBoard)));
 		}
 		const cpuGameBoard = cpuMove(playerGameBoard);
-		return {
-				   gameBoard: Maybe.of(cpuGameBoard),
-				   msg: getMessage(winner(cpuGameBoard))
-			   };
+		return new RenderObject(cpuGameBoard,
+								getMessage(winner(cpuGameBoard)));
 	} else {
-		return {
-				   gameBoard: Maybe.empty(),
-				   msg: Maybe.of('Area is not available. Pick a different one')
-			   };
+		return new RenderObject(Maybe.empty(),'Area is not available. Pick a different one');
 	}
 }
 
@@ -78,7 +72,7 @@ function checkWinner(gameBoard) {
 									   .map((area) => area.id);
 		return winningCombinations.map((combi) => isWinningCombination(combi, playerEntries))
 								  .filter((isWinning) => (isWinning))
-			.length > 0;
+								  .length > 0;
 	}
 }
 

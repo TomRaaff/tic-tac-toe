@@ -15,7 +15,11 @@ class None {
 
 class Maybe {
 	constructor(val) {
-		this.val = (val) ? new Some(val) : new None();
+		const value = (val instanceof Maybe)
+			? val.fold(() => undefined,
+					   (value) => value)
+			: val;
+		this.val = (value) ? new Some(value) : new None();
 	}
 	map(fn) { return this.val.map(fn); }
 	flatMap(fn) { return this.val.flatMap(fn); }
