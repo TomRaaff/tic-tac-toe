@@ -1,15 +1,15 @@
-import {areaIds, tags} from "../../constants.js";
+import { areaIds, Tag } from '../../constants.js';
+import { GameBoard } from '../GameBoard.model.js';
+import { Area } from '../Area.model.js';
 
-// (string?) -> 'X' | 'O' | 'none';
-function generateOption(player) {
-	let options = [tags.PLAYER, tags.CPU, tags.NONE];
+function generateOption(player: Tag | undefined): Tag {
+	let options = [Tag.PLAYER, Tag.CPU, Tag.NONE];
 	options = (player) ? options : options.filter((option) => option !== player);
 	const randomIndex = Math.floor(Math.random() * options.length);
 	return options[randomIndex];
 }
 
-// (string, num[], boolean?) -> GameBoard
-function createGameboardFor(player, combination, excludePlayer = false) {
+function createGameboardFor(player: Tag, combination: number[], excludePlayer = false): GameBoard {
 	return areaIds.map((areaId) => {
 		return {
 			id: areaId,
@@ -18,19 +18,18 @@ function createGameboardFor(player, combination, excludePlayer = false) {
 	});
 }
 
-// (string, number[][], boolean?) -> GameBoard[]
-export function createMultipleGameboardsFor(player, combinations, excludePlayer = false) {
+export function createMultipleGameboardsFor(player: Tag, combinations: number[][], excludePlayer = false): GameBoard[] {
 	return combinations.map((combination) => createGameboardFor(player, combination, excludePlayer));
 }
 
 // (number[], number[]) -> GameBoard
-export function createGameBoard(xEntries, oEntries) {
+export function createGameBoard(xEntries: number[], oEntries: number[]): GameBoard {
 	const xAreas = areaIds.filter((areaId) => xEntries.includes(areaId))
-						  .map((areaId) => ({id: areaId, occupiedBy: tags.PLAYER}));
+						  .map((areaId) => new Area(areaId, Tag.PLAYER));
 	const oAreas = areaIds.filter((areaId) => oEntries.includes(areaId))
-						  .map((areaId) => ({id: areaId, occupiedBy: tags.CPU}));
+						  .map((areaId) => new Area(areaId, Tag.CPU));
 	const filledAreas = [...xAreas, ...oAreas];
 	const emptyAreas = areaIds.filter((areaId) => !filledAreas.map(area => area.id).includes(areaId))
-							  .map((areaId) => ({id: areaId, occupiedBy: tags.NONE}));
+							  .map((areaId) => new Area(areaId, Tag.NONE));
 	return [...filledAreas, ...emptyAreas].sort((cur, prev) => cur.id - prev.id);
 }

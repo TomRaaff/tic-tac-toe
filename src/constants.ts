@@ -9,9 +9,9 @@ export const winningCombinations = [
 	[11, 22, 33],
 	[31, 22, 13]
 ]
-export const tags = {
-	PLAYER: 'X',
-	CPU: 'O',
-	NONE: 'none',
-	UNDETERMINED: 'undetermined'
+export enum Tag {
+	PLAYER = 'X',
+	CPU = 'O',
+	NONE = 'none',
+	UNDETERMINED = 'undetermined'
 }

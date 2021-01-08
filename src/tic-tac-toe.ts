@@ -1,13 +1,15 @@
-import {tags, winningCombinations} from "./constants.js";
+import {Tag, winningCombinations} from "./constants.js";
+// @ts-ignore
 import {Maybe} from "./utils/Maybe.js";
-import {RenderObject} from "./utils/RenderObject.js";
+import {RenderObject} from "./utils/RenderObject.model.js";
 import {log} from "./utils/utils.js";
+import { GameBoard } from './utils/GameBoard.model.js';
+import { Area } from './utils/Area.model.js';
 
-// (number, GameBoard) -> RenderObject<{gameBoard, msg}>
-export function play(areaId, gameBoard) {
+export function play(areaId: number, gameBoard: GameBoard): RenderObject {
 	if (isAvailable(areaId, gameBoard)) {
 		const playerGameBoard = playerMove(areaId, gameBoard);
-		if (tags.PLAYER === winner(playerGameBoard)) {
+		if (Tag.PLAYER === winner(playerGameBoard)) {
 			return new RenderObject(playerGameBoard,
 									getMessage(winner(playerGameBoard)));
 		}
@@ -19,30 +21,25 @@ export function play(areaId, gameBoard) {
 	}
 }
 
-// (number, GameBoard) -> GameBoard
-function playerMove(areaId, gameBoard) {
-	return fillGameBoard(gameBoard, tags.PLAYER, areaId);
+function playerMove(areaId: number, gameBoard: GameBoard): GameBoard {
+	return fillGameBoard(gameBoard, Tag.PLAYER, areaId);
 }
 
-// (GameBoard) -> GameBoard
-function cpuMove(gameBoard) {
+function cpuMove(gameBoard: GameBoard): GameBoard {
 	const randomArea = pickRandomAvailableAreaId(gameBoard);
-	return fillGameBoard(gameBoard, tags.CPU, randomArea);
+	return fillGameBoard(gameBoard, Tag.CPU, randomArea);
 }
 
-// (number, GameBoard) -> boolean
-function isAvailable(areaId, gameBoard) {
+function isAvailable(areaId: number, gameBoard: GameBoard): boolean {
 	return findArea(areaId, gameBoard).fold(() => false,
-											(area) => area.occupiedBy === tags.NONE);
+											(area: Area) => area.occupiedBy === Tag.NONE);
 }
 
-// (number, GameBoard) -> Maybe<{id, occupiedBy}>
-function findArea(id, gameBoard) {
+function findArea(id: number, gameBoard: GameBoard): Maybe<Area> {
 	return Maybe.of(gameBoard.find((area => area.id === id)));
 }
 
-// (GameBoard, string, number) -> GameBoard
-function fillGameBoard(gameBoard, playerTag, areaId) {
+function fillGameBoard(gameBoard: GameBoard, playerTag: Tag, areaId: number): GameBoard {
 	return gameBoard.map((area) => {
 		return {
 			...area,
@@ -51,23 +48,20 @@ function fillGameBoard(gameBoard, playerTag, areaId) {
 	});
 }
 
-// (GameBoard) -> number
-function pickRandomAvailableAreaId(gameBoard) {
+function pickRandomAvailableAreaId(gameBoard: GameBoard): number {
 	const randomIndex = Math.floor(Math.random() * gameBoard.length);
 	const area = gameBoard[randomIndex];
-	return (area.occupiedBy === tags.NONE) ? area.id : pickRandomAvailableAreaId(gameBoard);
+	return (area.occupiedBy === Tag.NONE) ? area.id : pickRandomAvailableAreaId(gameBoard);
 }
 
-// (number[], number[]) => boolean
-export function isWinningCombination(winningCombi, playerEntries) {
+export function isWinningCombination(winningCombi: number[], playerEntries: number[]): boolean {
 	// all elements of winningCombi array should be true to be a winner;
 	return winningCombi.map((areaLocation) => playerEntries.includes(areaLocation))
 					   .reduce((acc, cur) => (acc) ? cur : acc, true);
 }
 
-// (GameBoard) -> (string) -> boolean
-function checkWinner(gameBoard) {
-	return function isPlayerWinner(player) {
+function checkWinner(gameBoard: GameBoard): (player: string) => boolean {
+	return function isPlayerWinner(player: string) {
 		const playerEntries = gameBoard.filter((area) => area.occupiedBy === player)
 									   .map((area) => area.id);
 		return winningCombinations.map((combi) => isWinningCombination(combi, playerEntries))
@@ -76,20 +70,18 @@ function checkWinner(gameBoard) {
 	}
 }
 
-// (GameBoard) -> 'X' | 'O' | 'undetermined'
-function winner(gameBoard) {
+function winner(gameBoard: GameBoard): Tag {
 	const isWinner = checkWinner(gameBoard);
-	if (isWinner(tags.PLAYER)) return tags.PLAYER;
-	if (isWinner(tags.CPU)) return tags.CPU;
-	return tags.UNDETERMINED;
+	if (isWinner(Tag.PLAYER)) return Tag.PLAYER;
+	if (isWinner(Tag.CPU)) return Tag.CPU;
+	return Tag.UNDETERMINED;
 }
 
-// (string) -> Maybe[string]
-function getMessage(winner) {
-	if (winner === tags.PLAYER) {
+function getMessage(winner: Tag): Maybe<string> {
+	if (winner === Tag.PLAYER) {
 		return Maybe.of('Great job! You won!');
 	}
-	if (winner === tags.CPU) {
+	if (winner === Tag.CPU) {
 		return Maybe.of('Oh no! You lost!');
 	}
 	return Maybe.empty();

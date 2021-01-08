@@ -1,3 +1,4 @@
+// @ts-ignore
 import {attachGameClickHandlers, attachRestartClickHandler} from './io.js';
 
 /*
@@ -6,8 +7,10 @@ import {attachGameClickHandlers, attachRestartClickHandler} from './io.js';
 		- implement eslint (eslint-config-airbnb)
 		- submit as starting repo for other projects
  */
-(function start() {
+export function start() {
 	console.log('Lets play tic tac toe!');
 	attachGameClickHandlers();
 	attachRestartClickHandler();
-})();
+}
+
+start();

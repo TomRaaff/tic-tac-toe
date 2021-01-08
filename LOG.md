@@ -58,3 +58,9 @@ The only advice I didn't follow was Dennis' suggestion to have the
 render function accept 'actions' rather than having multiple render functions.
 Or, well, I did follow his advice, but came to the conclusion that it
 would be even better to have a render function that accepted an object.  
+
+### Day 8
+Implemented most of the files in TypeScript. Need to take a little more
+time for Either and Maybe. The generics are a bit tricky.
+And I need to get it to run. It compiles fine, but I'm not entirely
+sure how to succesfully serve the app.

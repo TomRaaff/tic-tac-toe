@@ -1,4 +1,4 @@
-
+// todo: type this
 class Left {
 	constructor(value) {
 		this.value = value;

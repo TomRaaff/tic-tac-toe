@@ -1,3 +1,4 @@
+// todo: type this
 class Some {
 	constructor(val) {
 		this.val = val;
