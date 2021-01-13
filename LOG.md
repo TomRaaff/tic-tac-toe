@@ -64,3 +64,13 @@ Implemented most of the files in TypeScript. Need to take a little more
 time for Either and Maybe. The generics are a bit tricky.
 And I need to get it to run. It compiles fine, but I'm not entirely
 sure how to succesfully serve the app.
+
+### Day 9
+Did a lot in 2 hours. I typed the Maybe and Either classes, though I think
+it could be better. I also fixed the unit tests to be able to handle typescript.
+I did not fix the testing errors.
+I also added the airbnb Eslint configuration. Which is damn strict... Tried to
+fix a lot, disabled some rules, but I still have 111 errors...
+
+I still have one bug though: All the generated JS files are missing the
+file-extensions in the imports.
