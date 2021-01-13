@@ -1,6 +1,6 @@
 import { areaIds, Tag } from '../../constants';
 import { GameBoard } from '../GameBoard.model';
-import { Area } from '../Area.model';
+import Area from '../Area.model';
 
 function generateOption(player: Tag | undefined): Tag {
 	let options = [Tag.PLAYER, Tag.CPU, Tag.NONE];
@@ -10,15 +10,17 @@ function generateOption(player: Tag | undefined): Tag {
 }
 
 function createGameboardFor(player: Tag, combination: number[], excludePlayer = false): GameBoard {
-	return areaIds.map((areaId) => {
-		return {
-			id: areaId,
-			occupiedBy: (combination.includes(areaId)) ? player : generateOption((excludePlayer) ? undefined : player)
-		}
-	});
+	return areaIds.map((areaId) => ({
+		id: areaId,
+		occupiedBy: (combination.includes(areaId))
+			? player
+			: generateOption((excludePlayer) ? undefined : player),
+	}));
 }
 
-export function createMultipleGameboardsFor(player: Tag, combinations: number[][], excludePlayer = false): GameBoard[] {
+export function createMultipleGameboardsFor(player: Tag,
+	combinations: number[][],
+	excludePlayer = false): GameBoard[] {
 	return combinations.map((combination) => createGameboardFor(player, combination, excludePlayer));
 }
 
@@ -28,7 +30,8 @@ export function createGameBoard(playerEntries: number[], cpuEntries: number[]): 
 	const oAreas = areaIds.filter((areaId) => cpuEntries.includes(areaId))
 						  .map((areaId) => new Area(areaId, Tag.CPU));
 	const filledAreas = [...xAreas, ...oAreas];
-	const emptyAreas = areaIds.filter((areaId) => !filledAreas.map(area => area.id).includes(areaId))
+	const emptyAreas = areaIds.filter((areaId) => !filledAreas.map((area) => area.id)
+															  .includes(areaId))
 							  .map((areaId) => new Area(areaId, Tag.NONE));
 	return [...filledAreas, ...emptyAreas].sort((cur, prev) => cur.id - prev.id);
 }

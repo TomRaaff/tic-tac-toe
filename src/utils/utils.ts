@@ -1,8 +1,8 @@
-function log(fn: (...args: any) => any): (...args: any) => any {
-	return function innerLog(...args: any) {
+function log(fn: (...args: unknown[]) => unknown): (...args: unknown[]) => unknown {
+	return function innerLog(...args: unknown[]) {
 		console.log(fn.name, '( ', ...args, ' ) -> ', fn(...args));
 		return fn(...args);
-	}
+	};
 }
 
 function toString(num: number): string {
@@ -12,4 +12,4 @@ function toString(num: number): string {
 function doNothing(): void {
 }
 
-export {log, toString, doNothing};
+export { log, toString, doNothing };

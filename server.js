@@ -14,7 +14,6 @@ port = process.argv[2] || 3000,
 		"css": "text/css"
 	};
 
-// todo even checken of `npx serve` ook afdoende is
 http.createServer(function (request, response) {
 
 	let uri = url.parse(request.url).pathname,

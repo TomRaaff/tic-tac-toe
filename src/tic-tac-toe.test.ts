@@ -1,5 +1,5 @@
 import { describe, it } from '@jest/globals';
-import { isWinningCombination, play, winner } from './tic-tac-toe';
+import { isWinningCombination, play, getWinner } from './tic-tac-toe';
 import { Tag, winningCombinations } from './constants';
 import { createGameBoard, createMultipleGameboardsFor } from './utils/testing-utils/create-gameboards';
 
@@ -31,7 +31,7 @@ describe('tic-tac-toe', () => {
 				const emptyGameBoard = createGameBoard([11], [12]);
 				const renderObject = play(11, emptyGameBoard);
 				renderObject.gameBoard.fold(() => expect(true).toBe(true),
-											() => fail());
+					() => fail());
 				renderObject.msg.fold(() => fail(),
 									  (msg) => expect(typeof msg).toEqual('string'));
 			});
@@ -43,7 +43,7 @@ describe('tic-tac-toe', () => {
 			const player = Tag.PLAYER;
 			const gameBoards = createMultipleGameboardsFor(player, winningCombinations);
 			gameBoards.forEach((gameBoard) => {
-				expect(winner(gameBoard)).toBe(player);
+				expect(getWinner(gameBoard)).toBe(player);
 			});
 		});
 
@@ -51,7 +51,7 @@ describe('tic-tac-toe', () => {
 			const player = Tag.CPU;
 			const gameBoards = createMultipleGameboardsFor(player, winningCombinations);
 			gameBoards.forEach((gameBoard) => {
-				expect(winner(gameBoard)).toBe(player);
+				expect(getWinner(gameBoard)).toBe(player);
 			});
 		});
 
@@ -59,11 +59,11 @@ describe('tic-tac-toe', () => {
 			const tieCombinations = [
 				[11, 13, 22, 31, 33],
 				[12, 21, 23, 32],
-				[11, 13, 22, 31]
+				[11, 13, 22, 31],
 			];
 			const gameBoardsForNone = createMultipleGameboardsFor(Tag.PLAYER, tieCombinations, true);
-			gameBoardsForNone.forEach(gameBoard => {
-				expect(winner(gameBoard)).toBe('undetermined');
+			gameBoardsForNone.forEach((gameBoard) => {
+				expect(getWinner(gameBoard)).toBe('undetermined');
 			});
 		});
 	});

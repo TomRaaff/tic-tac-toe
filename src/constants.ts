@@ -7,8 +7,8 @@ export const winningCombinations = [
 	[12, 22, 32],
 	[13, 23, 33],
 	[11, 22, 33],
-	[31, 22, 13]
-]
+	[31, 22, 13],
+];
 export enum Tag {
 	PLAYER = 'X',
 	CPU = 'O',

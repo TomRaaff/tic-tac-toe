@@ -2,8 +2,8 @@ import { doNothing, toString } from './utils/utils';
 import { areaIds, Tag } from './constants';
 import { play } from './tic-tac-toe';
 import { Maybe } from './utils/Maybe';
-import { Area } from './utils/Area.model';
-import { RenderObject } from './utils/RenderObject.model';
+import Area from './utils/Area.model';
+import RenderObject from './utils/RenderObject.model';
 import { GameBoard } from './utils/GameBoard.model';
 
 export function attachRestartClickHandler(): void {
@@ -21,14 +21,14 @@ function clearGameAreas(): void {
 
 export function attachGameClickHandlers(): void {
 	areaIds.forEach((id) => document.getElementById(toString(id))
-									?.addEventListener('click', () => {
-										render(play(id, readGameBoard()));
-									}));
+		?.addEventListener('click', () => {
+			render(play(id, readGameBoard()));
+		}));
 }
 
 export function readGameBoard(): GameBoard {
 	return areaIds.map((id) => new Area(id,
-										readGameArea(id).fold(() => Tag.NONE,
+		readGameArea(id).fold(() => Tag.NONE,
 															  (innerText: Tag) => innerText)));
 }
 
