@@ -1,6 +1,6 @@
-import { areaIds, Tag } from '../../constants.js';
-import { GameBoard } from '../GameBoard.model.js';
-import { Area } from '../Area.model.js';
+import { areaIds, Tag } from '../../constants';
+import { GameBoard } from '../GameBoard.model';
+import { Area } from '../Area.model';
 
 function generateOption(player: Tag | undefined): Tag {
 	let options = [Tag.PLAYER, Tag.CPU, Tag.NONE];
@@ -22,11 +22,10 @@ export function createMultipleGameboardsFor(player: Tag, combinations: number[][
 	return combinations.map((combination) => createGameboardFor(player, combination, excludePlayer));
 }
 
-// (number[], number[]) -> GameBoard
-export function createGameBoard(xEntries: number[], oEntries: number[]): GameBoard {
-	const xAreas = areaIds.filter((areaId) => xEntries.includes(areaId))
+export function createGameBoard(playerEntries: number[], cpuEntries: number[]): GameBoard {
+	const xAreas = areaIds.filter((areaId) => playerEntries.includes(areaId))
 						  .map((areaId) => new Area(areaId, Tag.PLAYER));
-	const oAreas = areaIds.filter((areaId) => oEntries.includes(areaId))
+	const oAreas = areaIds.filter((areaId) => cpuEntries.includes(areaId))
 						  .map((areaId) => new Area(areaId, Tag.CPU));
 	const filledAreas = [...xAreas, ...oAreas];
 	const emptyAreas = areaIds.filter((areaId) => !filledAreas.map(area => area.id).includes(areaId))

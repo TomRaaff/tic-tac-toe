@@ -1,4 +1,4 @@
-import { Tag } from '../constants.js';
+import { Tag } from '../constants';
 
 export class Area {
 	constructor(public readonly id: number,

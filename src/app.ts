@@ -1,5 +1,5 @@
 // @ts-ignore
-import {attachGameClickHandlers, attachRestartClickHandler} from './io.js';
+import {attachGameClickHandlers, attachRestartClickHandler} from './io';
 
 /*
 	todo:

@@ -1,10 +1,10 @@
-import { doNothing, toString } from './utils/utils.js';
-import { areaIds, Tag } from './constants.js';
-import { play } from './tic-tac-toe.js';
-import { Maybe } from './utils/Maybe.js';
-import { Area } from './utils/Area.model.js';
-import { RenderObject } from './utils/RenderObject.model.js';
-import { GameBoard } from './utils/GameBoard.model.js';
+import { doNothing, toString } from './utils/utils';
+import { areaIds, Tag } from './constants';
+import { play } from './tic-tac-toe';
+import { Maybe } from './utils/Maybe';
+import { Area } from './utils/Area.model';
+import { RenderObject } from './utils/RenderObject.model';
+import { GameBoard } from './utils/GameBoard.model';
 
 export function attachRestartClickHandler(): void {
 	document

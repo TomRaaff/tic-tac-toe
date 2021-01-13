@@ -1,5 +1,5 @@
 // @ts-ignore
-import {Maybe} from "./Maybe.js";
+import {Maybe} from "./Maybe";
 import { GameBoard } from './GameBoard.model';
 
 export class RenderObject {

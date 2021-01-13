@@ -8,6 +8,7 @@
     "sourceMap": true,
     "allowJs": true,
     "removeComments": true,
+    "esModuleInterop": true,
     // strict checks
     "strict": true,
     // linter checks

@@ -1,8 +1,8 @@
-import {Tag, winningCombinations} from "./constants.js";
-import {Maybe} from "./utils/Maybe.js";
-import {RenderObject} from "./utils/RenderObject.model.js";
-import { GameBoard } from './utils/GameBoard.model.js';
-import { Area } from './utils/Area.model.js';
+import {Tag, winningCombinations} from "./constants";
+import {Maybe} from "./utils/Maybe";
+import {RenderObject} from "./utils/RenderObject.model";
+import { GameBoard } from './utils/GameBoard.model';
+import { Area } from './utils/Area.model';
 
 export function play(areaId: number, gameBoard: GameBoard): RenderObject {
 	if (isAvailable(areaId, gameBoard)) {
@@ -68,7 +68,7 @@ function checkWinner(gameBoard: GameBoard): (player: string) => boolean {
 	}
 }
 
-function winner(gameBoard: GameBoard): Tag {
+export function winner(gameBoard: GameBoard): Tag {
 	const isWinner = checkWinner(gameBoard);
 	if (isWinner(Tag.PLAYER)) return Tag.PLAYER;
 	if (isWinner(Tag.CPU)) return Tag.CPU;
