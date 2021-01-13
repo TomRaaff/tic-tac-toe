@@ -1,8 +1,6 @@
 import { doNothing, toString } from './utils/utils.js';
 import { areaIds, Tag } from './constants.js';
-// @ts-ignore
 import { play } from './tic-tac-toe.js';
-// @ts-ignore
 import { Maybe } from './utils/Maybe.js';
 import { Area } from './utils/Area.model.js';
 import { RenderObject } from './utils/RenderObject.model.js';
@@ -35,7 +33,7 @@ export function readGameBoard(): GameBoard {
 }
 
 function readGameArea(id: number): Maybe<Tag> {
-	return Maybe.of(document.getElementById(toString(id))?.innerText);
+	return Maybe.of(document.getElementById(toString(id))?.innerText as Tag);
 }
 
 function render(renderObj: RenderObject): void {
@@ -44,8 +42,7 @@ function render(renderObj: RenderObject): void {
 }
 
 function renderBoard(gameBoard: GameBoard): GameBoard {
-	gameBoard.filter((area) => area.occupiedBy !== Tag.NONE)
-			 .forEach((area) => changeInnerTextOf(toString(area.id), area.occupiedBy));
+	gameBoard.forEach((area) => changeInnerTextOf(toString(area.id), area.occupiedBy));
 	return gameBoard;
 }
 

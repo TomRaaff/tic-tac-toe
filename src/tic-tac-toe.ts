@@ -1,8 +1,6 @@
 import {Tag, winningCombinations} from "./constants.js";
-// @ts-ignore
 import {Maybe} from "./utils/Maybe.js";
 import {RenderObject} from "./utils/RenderObject.model.js";
-import {log} from "./utils/utils.js";
 import { GameBoard } from './utils/GameBoard.model.js';
 import { Area } from './utils/Area.model.js';
 

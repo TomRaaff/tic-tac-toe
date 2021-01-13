@@ -12,6 +12,6 @@ export const winningCombinations = [
 export enum Tag {
 	PLAYER = 'X',
 	CPU = 'O',
-	NONE = 'none',
+	NONE = '',
 	UNDETERMINED = 'undetermined'
 }

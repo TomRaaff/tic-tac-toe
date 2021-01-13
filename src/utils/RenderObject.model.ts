@@ -3,9 +3,11 @@ import {Maybe} from "./Maybe.js";
 import { GameBoard } from './GameBoard.model';
 
 export class RenderObject {
-	constructor(public readonly gameBoard: GameBoard | Maybe<GameBoard>,
-				public readonly msg: string | Maybe<string>) {
-		this.gameBoard = Maybe.of(gameBoard) || Maybe.empty();
-		this.msg = Maybe.of(msg) || Maybe.empty();
+	public readonly gameBoard: Maybe<GameBoard>;
+	public readonly msg: Maybe<string>;
+	constructor(gameBoard: GameBoard | Maybe<GameBoard>,
+				msg: string | Maybe<string>) {
+		this.gameBoard = (gameBoard instanceof Maybe) ? gameBoard : Maybe.of(gameBoard);
+		this.msg = (msg instanceof Maybe) ? msg : Maybe.of(msg);
 	}
 }

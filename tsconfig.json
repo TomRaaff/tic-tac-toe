@@ -1,15 +1,24 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "outDir": "./dist",
-    "allowJs": false,
-    "strict": true,
+    "module": "ES2015",
+    "moduleResolution": "Node",
     "target": "ES6",
-    "lib": [
-      "dom"
-    ]
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "allowJs": true,
+    "removeComments": true,
+    // strict checks
+    "strict": true,
+    // linter checks
+    "noImplicitReturns": true,
+    "noUnusedLocals": true
   },
   "include": [
     "./src/**/*"
+  ],
+  "exclude": [
+    "./src/*.test.js",
+    "./src/**/*.test.js"
   ]
 }
