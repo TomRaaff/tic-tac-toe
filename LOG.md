@@ -74,3 +74,13 @@ fix a lot, disabled some rules, but I still have 111 errors...
 
 I still have one bug though: All the generated JS files are missing the
 file-extensions in the imports.
+
+### Day 10
+Finally finished the build/devserver problems by adding webpack. I didn't want
+to go there at first because I wanted to focus on coding rather than build tooling.
+The result was that I was forced to still mess around with build tooling. Luckily,
+I stumbled upon a working, simple webpack configuration that would work in my project
+as well. So in the end, just adding webpack (the right way) would have been fastest.
+It enables me to not have stupid MIME-type errors when serving files, allows me
+to run tests with Jest and since it bundles all files to a single .js file, I don't 
+have to specify .js in the imports of my .ts files anymore.
